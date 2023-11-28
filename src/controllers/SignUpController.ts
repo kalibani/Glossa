@@ -2,11 +2,7 @@ import { Request, Response, NextFunction } from "express";
 
 import { client, handleHashPassword } from "../libs";
 import { USERS } from "../models";
-export const SignUp = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const SignUp = async (req: Request, res: Response) => {
   const { email, password } = req.body;
   if (!email || !password) {
     return res.status(400).json({
