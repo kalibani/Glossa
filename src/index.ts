@@ -3,7 +3,10 @@ import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import cors from "cors";
 
+import mongoose from "mongoose";
+
 import { SignUp, SignIn } from "./routes";
+import { MONGO_URI } from "./config";
 
 dotenv.config();
 
@@ -14,9 +17,18 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
-app.use("/user", SignUp);
+app.use(SignUp);
 
-app.use("/user", SignIn);
+app.use(SignIn);
+
+mongoose
+  .connect(MONGO_URI)
+  .then(() => {
+    console.log("connected successfully");
+  })
+  .catch((err) => {
+    console.log("Error received= " + err);
+  });
 
 app.listen(PORT, () => {
   console.log(`server is running on port ${PORT}`);

@@ -1,5 +1,17 @@
+import mongoose, { Schema } from "mongoose";
 import { USER } from "../dto/User.dto";
 
-const USERS: USER[] = [];
+const UserSchema = new Schema(
+  {
+    id: { type: String, required: true },
+    email: { type: String, required: true },
+    hashed_password: { type: String, required: true },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-export { USERS };
+const Users = mongoose.model<USER>("user", UserSchema);
+
+export { Users };

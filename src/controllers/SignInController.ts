@@ -1,12 +1,11 @@
-import { Request, Response, NextFunction } from "express";
-
-import { genSaltSync, hashSync } from "bcrypt";
+import { Request, Response } from "express";
 
 import { client, handleHashPassword } from "../libs";
-import { USERS } from "../models";
+import { Users } from "../models";
+
 export const SignIn = async (req: Request, res: Response) => {
   const { email, password } = req.body;
-  const user = USERS.find((user) => user.email === email);
+  const user = await Users.findOne({ email: email }).exec();
   const hashed_password = handleHashPassword(password);
 
   if (!user || user.hashed_password !== hashed_password) {

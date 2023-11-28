@@ -1,7 +1,7 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
 
 import { client, handleHashPassword } from "../libs";
-import { USERS } from "../models";
+import { Users } from "../models";
 export const SignUp = async (req: Request, res: Response) => {
   const { email, password } = req.body;
   if (!email || !password) {
@@ -17,7 +17,9 @@ export const SignUp = async (req: Request, res: Response) => {
     });
   }
 
-  const existingUser = USERS.find((user) => user.email === email);
+  const existingUser = await Users.findOne({ email: email }).exec();
+
+  console.log("-->", existingUser);
 
   if (existingUser) {
     return res.status(400).json({
@@ -34,7 +36,12 @@ export const SignUp = async (req: Request, res: Response) => {
       email,
       hashed_password,
     };
-    USERS.push(user);
+
+    await Users.create({
+      id,
+      email,
+      hashed_password,
+    });
 
     // Create user in Stream Chat
     await client.upsertUser({
